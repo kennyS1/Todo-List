@@ -36,12 +36,14 @@ function LoginView() {
 
       const data = await response.json();
       if (response.ok) {
-        alert('Login successful!');
-        // 存储 token 和 user_id
         localStorage.setItem('token', data.token);
         localStorage.setItem('user_id', data.user_id);
+
+        // 触发 storage 事件，通知 NavBar 更新
+        window.dispatchEvent(new Event('storage'));
+
         setFormData({ username: '', password: '' });
-        navigate('/todos'); // 跳转到 Todo 列表页面
+        navigate('/'); // 登录成功后跳转到 Home 页面
       } else {
         alert(`Login failed: ${data.detail || 'Unknown error'}`);
       }
