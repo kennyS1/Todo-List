@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../css/RegisterView.css'; // 假设你有这个 CSS 文件
+import { useNavigate } from 'react-router-dom';
 
 function RegisterView() {
   // 定义表单状态
@@ -8,6 +9,7 @@ function RegisterView() {
     password: '',
     checkPassword: '',
   });
+  const navigate = useNavigate();
 
   // 处理输入变化
   const handleChange = (e) => {
@@ -53,7 +55,7 @@ function RegisterView() {
             // 可选：清空表单
             setFormData({ username: '', password: '', checkPassword: '' });
             // 可选：跳转到登录页面（需要 react-router-dom）
-            // navigate('/login');
+            navigate('/login');
         } else {
             alert(`Registration failed: ${data.detail || 'Unknown error'}`);
         }
