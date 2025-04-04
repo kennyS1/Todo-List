@@ -1,0 +1,12 @@
+.card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* 确保容器占满视口高度 */
+    padding: 20px; /* 可选：添加一些内边距 */
+  }
+  
+  .card-body {
+    width: 100%; /* 确保表单宽度适应 */
+    max-width: 500px; /* 可选：限制最大宽度 */
+  }
