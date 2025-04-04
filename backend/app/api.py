@@ -1,9 +1,11 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, status
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 import aiomysql
-from contextlib import asynccontextmanager
 from passlib.context import CryptContext
+import jwt  # 直接导入 jwt 模块
+from datetime import datetime, timedelta
+from contextlib import asynccontextmanager
 
 app = FastAPI()
 
@@ -28,6 +30,12 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+# JWT配置
+SECRET_KEY = "your-secret-key"  # 替换为安全的密钥
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+
 # 允许跨域请求
 app.add_middleware(
     CORSMiddleware,
@@ -37,7 +45,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 定义请求数据模型
+# 数据模型
 class UserRegister(BaseModel):
     username: str
     password: str
@@ -46,6 +54,14 @@ class UserLogin(BaseModel):
     username: str
     password: str
 
+class TodoItem(BaseModel):
+    id: int
+    user_id: int
+    title: str
+    completed: bool
+    
+    
+
 # 依赖注入：获取数据库连接
 async def get_db():
     async with app.state.pool.acquire() as conn:
@@ -53,12 +69,35 @@ async def get_db():
             yield cur
 
 
+# JWT
+
+# 创建访问令牌
+def create_access_token(data: dict, expires_delta: timedelta):
+    to_encode = data.copy()
+    expire = datetime.utcnow() + expires_delta
+    to_encode.update({"exp": expire})
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+
+# 获取当前用户
+async def get_current_user(token: str = Depends(get_db)):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if not username:
+            raise HTTPException(status_code=401, detail="Invalid token")
+        return username
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+
 
 # api
-
 @app.get("/")
 async def home():
     return {"message": "home page"}
+
+
+
 
 # 注册端点
 @app.post("/register")
@@ -79,27 +118,26 @@ async def userRegister(user: UserRegister, db=Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
 
 
-# 登录端点
+# 登录端点（使用明文密码验证）
 @app.post("/login")
 async def userLogin(user: UserLogin, db=Depends(get_db)):
     try:
         # 查询用户是否存在
-        await db.execute("SELECT password FROM users WHERE username = %s", (user.username,))
+        await db.execute("SELECT id, password FROM users WHERE username = %s", (user.username,))
         result = await db.fetchone()
-
         if not result:
             raise HTTPException(status_code=400, detail="User not found")
 
-        # 直接比较明文密码（临时解决方案）
-        stored_password = result[0]
+        user_id, stored_password = result
+        # 直接比较明文密码
         if user.password != stored_password:
             raise HTTPException(status_code=400, detail="Incorrect password")
 
-        # 登录成功，返回用户信息
-        return {
-            "message": "Login successful",
-            "username": user.username
-        }
+        # 生成访问令牌
+        access_token = create_access_token(
+            data={"sub": user.username}, expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        )
+        return {"message": "Login successful", "token": access_token, "user_id": user_id}
     except HTTPException as http_err:
         raise http_err
     except Exception as e:
