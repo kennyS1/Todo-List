@@ -36,8 +36,8 @@ python -m venv venv
 source venv/bin/activate  # On macOS/Linux
 .\venv\Scripts\activate  # On Windows
 ```
-#### 2. create the database: execute the todo_db.sql
-
+#### 2. create the database: 
+- **execute the todo_db.sql**
 #### 3. Install the required packages:
 ```bash
 pip install -r requirements.txt
