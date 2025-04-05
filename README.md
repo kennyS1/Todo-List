@@ -66,7 +66,7 @@ npm run dev
 
 ### 4. Access the application
 #### The backend will run at http://localhost:8000
-#### The frontend will run at http://localhost:3000
+#### The frontend will run at http://localhost:5173
 
 ### 5. How to Use
 #### Add Task: Enter a task description in the input field and click "Add".
