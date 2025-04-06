@@ -102,12 +102,6 @@ async def get_current_user(
         raise HTTPException(status_code=401, detail="Invalid token")
 
 
-
-# api
-@app.get("/")
-async def home():
-    return {"message": "home page"}
-
 # 查询正在登录的userid的todos
 @app.get("/todos")
 async def get_todos(current_user: dict = Depends(get_current_user), db=Depends(get_db)):

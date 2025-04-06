@@ -27,7 +27,7 @@ function NavBar() {
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
-        <Link className="navbar-brand" to="/">Todo List</Link>
+        <Link className="navbar-brand" to="/todos">Todo List</Link>
         <button
           className="navbar-toggler"
           type="button"
@@ -42,7 +42,7 @@ function NavBar() {
         <div className="collapse navbar-collapse" id="navbarText">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link className="nav-link active" aria-current="page" to="/">Home</Link>
+              <Link className="nav-link active" aria-current="page" to="/todos">Home</Link>
             </li>
             {!isLoggedIn ? (
               <>

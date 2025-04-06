@@ -43,7 +43,7 @@ function LoginView() {
         window.dispatchEvent(new Event('storage'));
 
         setFormData({ username: '', password: '' });
-        navigate('/'); // 登录成功后跳转到 Home 页面
+        navigate('/todos'); // 登录成功后跳转到 Home 页面
       } else {
         alert(`Login failed: ${data.detail || 'Unknown error'}`);
       }

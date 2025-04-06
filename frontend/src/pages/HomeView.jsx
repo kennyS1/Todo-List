@@ -8,6 +8,12 @@ const HomeView = () => {
 
   // 加载 todo 列表
   const fetchTodos = async () => {
+    if (!token) {
+      // 如果没有 token，跳转到登录页面
+      history.push("/login");
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:8000/todos", {
         headers: {

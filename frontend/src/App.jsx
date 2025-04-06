@@ -14,7 +14,7 @@ function App() {
       <NavBar />
       <main >
         <Routes>
-          <Route path="/" element={<HomeView />} />
+          <Route path="/todos" element={<HomeView />} />
           <Route path="/register" element={<RegisterView />} />
           <Route path="/login" element={<LoginView />} />
         </Routes>
