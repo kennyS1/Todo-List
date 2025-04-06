@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/LoginView.css';
 
+const apiUrl = "http://193.112.181.152:8000";
+
 function LoginView() {
   const [formData, setFormData] = useState({
     username: '',
@@ -25,7 +27,7 @@ function LoginView() {
     }
 
     try {
-      const response = await fetch('http://localhost:8000/login', {
+      const response = await fetch(`${apiUrl}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

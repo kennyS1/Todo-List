@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import '../css/RegisterView.css'; // 假设你有这个 CSS 文件
 import { useNavigate } from 'react-router-dom';
 
+const apiUrl = "http://193.112.181.152:8000";
+
 function RegisterView() {
   // 定义表单状态
   const [formData, setFormData] = useState({
@@ -38,7 +40,7 @@ function RegisterView() {
         }
 
         try {
-        const response = await fetch('http://localhost:8000/register', { // 替换为你的 FastAPI 地址
+        const response = await fetch(`${apiUrl}/register`, { // 替换为你的 FastAPI 地址
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',

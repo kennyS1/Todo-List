@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 
+const apiUrl = "http://193.112.181.152:8000";
+
 const HomeView = () => {
   const [todos, setTodos] = useState([]);
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const token = localStorage.getItem("token");
+
 
   // 加载 todo 列表
   const fetchTodos = async () => {
@@ -15,7 +18,7 @@ const HomeView = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:8000/todos", {
+      const response = await fetch(`${apiUrl}/todos`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -35,7 +38,7 @@ const HomeView = () => {
     if (!description.trim()) return;
 
     try {
-      const response = await fetch("http://localhost:8000/todos/add", {
+      const response = await fetch(`${apiUrl}/todos/add`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -59,7 +62,7 @@ const HomeView = () => {
 
   // ✅ 完成 todo
   const handleComplete = async (id) => {
-    await fetch(`http://localhost:8000/todos/${id}/complete`, {
+    await fetch(`${apiUrl}/todos/${id}/complete`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -70,7 +73,7 @@ const HomeView = () => {
 
   // 🗑 删除 todo
   const handleDelete = async (id) => {
-    await fetch(`http://localhost:8000/todos/${id}`, {
+    await fetch(`${apiUrl}/todos/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,

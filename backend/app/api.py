@@ -46,7 +46,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 # 允许跨域请求
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # 替换为你的前端地址
+    allow_origins=["*"],  # 替换为你的前端地址
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
